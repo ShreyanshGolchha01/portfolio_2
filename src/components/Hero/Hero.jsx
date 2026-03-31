@@ -1,0 +1,132 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Icosahedron, MeshDistortMaterial } from '@react-three/drei';
+import meImage from '../../assets/me.png';
+import './Hero.css';
+
+const Typewriter = ({ words }) => {
+  const [index, setIndex] = useState(0);
+  const [subIndex, setSubIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [blink, setBlink] = useState(true);
+
+  useEffect(() => {
+    if (subIndex === words[index].length + 1 && !isDeleting) {
+      setTimeout(() => setIsDeleting(true), 1500);
+      return;
+    }
+
+    if (subIndex === 0 && isDeleting) {
+      setIsDeleting(false);
+      setIndex((prev) => (prev + 1) % words.length);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setSubIndex((prev) => prev + (isDeleting ? -1 : 1));
+    }, isDeleting ? 50 : 100);
+
+    return () => clearTimeout(timeout);
+  }, [subIndex, index, isDeleting, words]);
+
+  useEffect(() => {
+    const blinkTimeout = setInterval(() => setBlink((prev) => !prev), 500);
+    return () => clearInterval(blinkTimeout);
+  }, []);
+
+  return (
+    <span className="typewriter">
+      {words[index].substring(0, subIndex)}
+      <span className={`cursor ${blink ? 'visible' : 'hidden'}`}>|</span>
+    </span>
+  );
+};
+
+const ThreeDElement = () => {
+  return (
+    <Canvas camera={{ position: [0, 0, 5] }}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 10]} intensity={1} />
+      <Icosahedron args={[1.5, 0]}>
+        <MeshDistortMaterial
+          color="#B026FF"
+          emissive="#00F5FF"
+          emissiveIntensity={0.2}
+          wireframe
+          distort={0.4}
+          speed={2}
+        />
+      </Icosahedron>
+      <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={2} />
+    </Canvas>
+  );
+};
+
+const Hero = () => {
+  const roles = [
+    "Full Stack Developer",
+    "UI/UX Designer",
+    "Problem Solver",
+    "Tech Enthusiast"
+  ];
+
+  return (
+    <section id="home" className="hero-section">
+      <div className="hero-background"></div>
+      
+      <div className="hero-container">
+        <motion.div 
+          className="hero-content"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <h1 className="hero-name glitch" data-text="Shreyansh Golchha">
+            Shreyansh Golchha
+          </h1>
+          
+          <div className="hero-roles">
+            <span className="static-text">I am a </span>
+            <span className="dynamic-text"><Typewriter words={roles} /></span>
+          </div>
+          
+          <p className="hero-tagline">
+            Building digital experiences that matter.
+          </p>
+          
+          <div className="hero-ctas">
+            <a href="#projects" className="cta-button primary hover-target">
+              View My Work
+            </a>
+            <a href="#contact" className="cta-button secondary hover-target">
+              Let's Talk
+            </a>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="hero-visuals"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <div className="canvas-container">
+            <ThreeDElement />
+          </div>
+          
+          <div className="profile-container hover-target">
+            <div className="rotating-border"></div>
+            <img 
+              src={meImage}
+              alt="Shreyansh Golchha" 
+              className="profile-img"
+            />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;

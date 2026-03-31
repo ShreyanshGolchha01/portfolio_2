@@ -1,0 +1,125 @@
+.skills-section {
+  padding: 100px 0;
+  background: var(--bg-color);
+  overflow: hidden;
+}
+
+.skills-section .section-header {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.marquee-container {
+  margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.marquee-row {
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+}
+
+.marquee-row::before,
+.marquee-row::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 100%;
+  z-index: 2;
+}
+
+.marquee-row::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-color), transparent);
+}
+
+.marquee-row::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-color), transparent);
+}
+
+.marquee-content {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  padding: 10px 0;
+}
+
+.right-to-left .marquee-content {
+  animation: scroll-left 30s linear infinite;
+}
+
+.left-to-right .marquee-content {
+  animation: scroll-right 30s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-33.33%); }
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(-33.33%); }
+  100% { transform: translateX(0); }
+}
+
+.marquee-item {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.marquee-item:hover {
+  color: var(--accent-cyan);
+  -webkit-text-stroke: 0px transparent;
+  text-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
+}
+
+.left-to-right .marquee-item:hover {
+  color: var(--accent-purple);
+  text-shadow: 0 0 20px rgba(176, 38, 255, 0.4);
+}
+
+.skills-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 50px;
+}
+
+.skills-tech-card-wrap {
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .skills-container {
+    padding: 0 35px;
+  }
+
+  .marquee-container {
+    margin-bottom: 72px;
+  }
+
+  .marquee-item {
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .skills-container {
+    padding: 0 25px;
+  }
+
+  .marquee-item {
+    font-size: 2rem;
+  }
+}
